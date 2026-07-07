@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Tutoring Hub — Course Catalog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #F7F5F0;
+    --paper-raised: #FFFFFF;
+    --line: #E1DCCF;
+    --ink: #1E2A44;
+    --ink-soft: #55617A;
+    --ink-faint: #8B93A6;
+    --brass: #A8823C;
+    --brass-soft: #F1E6D0;
+    --sage: #5F7A6A;
+    --sage-soft: #E7EEE8;
+    --rust: #A6503E;
+    --rust-soft: #F3E3DF;
+    --radius: 3px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;line-height:1.5;}
+  h1,h2,h3{font-family:'Source Serif 4',serif;font-weight:700;margin:0;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .wrap{max-width:960px;margin:0 auto;padding:0 28px;}
+
+  /* ---------- HERO ---------- */
+  header.hero{
+    border-bottom:1px solid var(--line);
+    padding:64px 0 48px;
+    background:
+      repeating-linear-gradient(180deg, transparent, transparent 27px, var(--line) 28px);
+    background-size: 100% 28px;
+    background-position: 0 140px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--brass);margin-bottom:14px;display:flex;align-items:center;gap:10px;
+    opacity:0; animation: fadeUp .6s ease-out forwards;
+  }
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--brass);display:inline-block;}
+  h1.title{
+    font-size:clamp(38px,6vw,60px);
+    line-height:1.05;
+    max-width:720px;
+    opacity:0; animation: fadeUp .7s ease-out .08s forwards;
+  }
+  .subtitle{
+    color:var(--ink-soft);font-size:17px;max-width:520px;margin-top:18px;
+    opacity:0; animation: fadeUp .7s ease-out .16s forwards;
+  }
+  .hero-meta{
+    display:flex;gap:28px;flex-wrap:wrap;margin-top:34px;
+    opacity:0; animation: fadeUp .7s ease-out .24s forwards;
+  }
+  .hero-meta div{font-size:13px;color:var(--ink-faint);font-family:'IBM Plex Mono',monospace;}
+  .hero-meta strong{display:block;color:var(--ink);font-family:'IBM Plex Sans';font-size:14px;font-weight:600;margin-top:2px;}
+  .cta-row{margin-top:34px;display:flex;gap:14px;flex-wrap:wrap;opacity:0;animation: fadeUp .7s ease-out .3s forwards;}
+  .btn{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.03em;
+    padding:12px 20px;border-radius:var(--radius);border:1px solid var(--ink);
+    background:var(--ink);color:var(--paper);cursor:pointer;text-decoration:none;
+    display:inline-flex;align-items:center;gap:8px;transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{transform:translateY(-1px);background:#2c3c60;}
+  .btn.ghost{background:transparent;color:var(--ink);border-color:var(--ink);}
+  .btn.ghost:hover{background:var(--ink);color:var(--paper);}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ---------- SECTION HEADERS ---------- */
+  section{padding:56px 0;border-bottom:1px solid var(--line);}
+  .sec-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:32px;flex-wrap:wrap;gap:10px;}
+  .sec-num{font-family:'IBM Plex Mono',monospace;color:var(--brass);font-size:13px;}
+  .sec-title{font-size:28px;}
+  .sec-note{color:var(--ink-faint);font-size:13px;font-family:'IBM Plex Mono',monospace;max-width:280px;text-align:right;}
+
+  /* ---------- CATALOG / DEPARTMENTS ---------- */
+  .dept{margin-bottom:36px;}
+  .dept-name{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-soft);border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:12px;
+    display:flex;justify-content:space-between;
+  }
+  .course-list{display:flex;flex-direction:column;}
+  .course{
+    display:grid;grid-template-columns:96px 1fr auto;gap:16px;align-items:center;
+    padding:12px 10px;border-radius:var(--radius);transition:background .15s ease;
+  }
+  .course:hover{background:var(--paper-raised);}
+  .course-code{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-faint);}
+  .course-name{font-size:15.5px;}
+  .badge{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.05em;
+    padding:4px 9px;border-radius:20px;white-space:nowrap;
+  }
+  .badge.specialty{background:var(--brass-soft);color:var(--brass);border:1px solid #e3d1a6;}
+  .badge.specialty::before{content:"★ ";}
+
+  /* ---------- AVAILABILITY ---------- */
+  .mode-toggle{display:flex;gap:0;border:1px solid var(--ink);border-radius:var(--radius);overflow:hidden;width:fit-content;margin-bottom:22px;}
+  .mode-toggle button{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;padding:9px 16px;border:none;background:var(--paper);
+    cursor:pointer;color:var(--ink-soft);
+  }
+  .mode-toggle button.active{background:var(--ink);color:var(--paper);}
+  .legend{display:flex;gap:18px;margin-bottom:18px;flex-wrap:wrap;}
+  .legend span{font-size:12px;color:var(--ink-soft);display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;}
+  .legend i{width:11px;height:11px;border-radius:2px;display:inline-block;}
+  .grid-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper-raised);}
+  table.schedule{border-collapse:collapse;width:100%;min-width:640px;}
+  table.schedule th, table.schedule td{border:1px solid var(--line);text-align:center;padding:0;}
+  table.schedule th{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-soft);
+    padding:10px 4px;background:var(--paper);font-weight:500;
+  }
+  table.schedule td.time{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-faint);
+    padding:0 8px;white-space:nowrap;background:var(--paper);
+  }
+  .slot{
+    height:38px;cursor:pointer;font-size:10.5px;font-family:'IBM Plex Mono',monospace;
+    display:flex;align-items:center;justify-content:center;transition:filter .1s ease;
+  }
+  .slot:hover{filter:brightness(0.95);}
+  .slot.open{background:var(--sage-soft);color:var(--sage);}
+  .slot.closed{background:#EDEBE4;color:var(--ink-faint);cursor:default;}
+  .slot.booked{background:var(--brass-soft);color:var(--brass);}
+  .slot.blocked{background:var(--rust-soft);color:var(--rust);}
+
+  /* ---------- CONTACT ---------- */
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+  form{display:flex;flex-direction:column;gap:14px;}
+  label{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-soft);letter-spacing:.04em;text-transform:uppercase;}
+  input, textarea, select{
+    font-family:'IBM Plex Sans',sans-serif;font-size:14.5px;padding:11px 12px;
+    border:1px solid var(--line);border-radius:var(--radius);background:var(--paper-raised);color:var(--ink);
+  }
+  input:focus, textarea:focus, select:focus{outline:2px solid var(--brass);outline-offset:1px;border-color:var(--brass);}
+  textarea{resize:vertical;min-height:90px;}
+  .contact-info{border-left:1px solid var(--line);padding-left:36px;}
+  .contact-info .label{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+  .contact-info .val{font-size:15px;margin-bottom:22px;}
+  .form-status{font-size:13px;font-family:'IBM Plex Mono',monospace;margin-top:4px;min-height:18px;}
+  .form-status.ok{color:var(--sage);}
+
+  footer{padding:32px 0;text-align:center;color:var(--ink-faint);font-family:'IBM Plex Mono',monospace;font-size:12px;}
+
+  @media (max-width:640px){
+    .contact-grid{grid-template-columns:1fr;}
+    .contact-info{border-left:none;padding-left:0;border-top:1px solid var(--line);padding-top:24px;}
+    .course{grid-template-columns:1fr;gap:4px;}
+    .course-code{order:2;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Course Catalog &nbsp;·&nbsp; Est. 2026</div>
+    <h1 class="title">The Tutoring Hub</h1>
+    <p class="subtitle">One-on-one tutoring across math, writing, science, history, world language, and music theory — taught by a fellow student who actually likes this stuff. <span class="mono" style="font-size:13px;">(Edit this line with your name!)</span></p>
+    <div class="hero-meta">
+      <div>Departments<strong>6 subject areas</strong></div>
+      <div>Format<strong>In person or virtual</strong></div>
+      <div>Rate<strong>Ask for details</strong></div>
+    </div>
+    <div class="cta-row">
+      <a href="#availability" class="btn">Book a session →</a>
+      <a href="#catalog" class="btn ghost">View subjects</a>
+    </div>
+  </div>
+</header>
+
+<section id="catalog">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="sec-num">§ 01</div><h2 class="sec-title">Subject Catalog</h2></div>
+      <div class="sec-note">★ marks my strongest / favorite subjects to teach</div>
+    </div>
+
+    <div id="catalog-root"></div>
+  </div>
+</section>
+
+<section id="availability">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="sec-num">§ 02</div><h2 class="sec-title">Weekly Availability</h2></div>
+      <div class="sec-note">Weekday afternoons · most of the day on weekends</div>
+    </div>
+
+    <div class="mode-toggle" id="modeToggle">
+      <button class="active" data-mode="book">Book a slot</button>
+      <button data-mode="tutor">Tutor: manage availability</button>
+    </div>
+
+    <div class="legend">
+      <span><i style="background:var(--sage-soft);border:1px solid var(--sage);"></i>Open</span>
+      <span><i style="background:var(--brass-soft);border:1px solid var(--brass);"></i>Booked</span>
+      <span><i style="background:var(--rust-soft);border:1px solid var(--rust);"></i>Blocked</span>
+      <span><i style="background:#EDEBE4;border:1px solid var(--ink-faint);"></i>Not offered</span>
+    </div>
+
+    <div class="grid-scroll">
+      <table class="schedule" id="scheduleTable"></table>
+    </div>
+    <div class="form-status" id="scheduleStatus"></div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="sec-num">§ 03</div><h2 class="sec-title">Get in Touch</h2></div>
+      <div class="sec-note">I usually reply within a day</div>
+    </div>
+
+    <div class="contact-grid">
+      <form id="contactForm">
+        <div>
+          <label for="cname">Name</label>
+          <input id="cname" required placeholder="Your name">
+        </div>
+        <div>
+          <label for="cemail">Email</label>
+          <input id="cemail" type="email" required placeholder="you@example.com">
+        </div>
+        <div>
+          <label for="csubject">Subject you need help with</label>
+          <input id="csubject" placeholder="e.g. AP English Lang, College Trig...">
+        </div>
+        <div>
+          <label for="cmessage">Message</label>
+          <textarea id="cmessage" required placeholder="What are you looking for help with?"></textarea>
+        </div>
+        <button type="submit" class="btn" style="align-self:flex-start;">Send message</button>
+        <div class="form-status" id="formStatus"></div>
+      </form>
+
+      <div class="contact-info">
+        <div class="label">Email</div>
+        <div class="val">your.email@example.com</div>
+        <div class="label">Phone</div>
+        <div class="val">(555) 555-5555</div>
+        <div class="label">Response time</div>
+        <div class="val">Within 24 hours</div>
+        <div class="label">Best for</div>
+        <div class="val">Book through the schedule above for fastest confirmation — the form is great for questions before you book.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>The Tutoring Hub — built with care, one lesson at a time.</footer>
+
+<script>
+/* ---------------- CATALOG DATA ---------------- */
+const departments = [
+  { name: "Mathematics", courses: [
+    { code: "MATH 070", name: "Pre-Algebra" },
+    { code: "MATH 101", name: "Algebra 1" },
+    { code: "MATH 102", name: "Geometry" },
+    { code: "MATH 201", name: "Algebra 2" },
+    { code: "MATH 210", name: "College Algebra" },
+    { code: "MATH 220", name: "College Trigonometry", star:true },
+  ]},
+  { name: "English & Writing", courses: [
+    { code: "ENGL 100", name: "Any English Class — Writing Focus", star:true },
+    { code: "ENGL 301", name: "AP English Lang & Comp + AP Exam Prep" },
+    { code: "ENGL 250", name: "Literature and Film", star:true },
+  ]},
+  { name: "Sciences", courses: [
+    { code: "CHEM 101", name: "Chemistry" },
+    { code: "STEM 100", name: "STEM Academy Survey" },
+  ]},
+  { name: "History", courses: [
+    { code: "HIST 110", name: "World History" },
+    { code: "HIST 120", name: "US History" },
+  ]},
+  { name: "World Language", courses: [
+    { code: "SPAN 101–401", name: "Spanish, Levels 1–4", star:true },
+  ]},
+  { name: "Music", courses: [
+    { code: "MUS 301", name: "AP Music Theory", star:true },
+  ]},
+];
+
+const catalogRoot = document.getElementById('catalog-root');
+departments.forEach(dept => {
+  const deptEl = document.createElement('div');
+  deptEl.className = 'dept';
+  deptEl.innerHTML = `
+    <div class="dept-name"><span>${dept.name}</span><span>${dept.courses.length} course${dept.courses.length>1?'s':''}</span></div>
+    <div class="course-list">
+      ${dept.courses.map(c => `
+        <div class="course">
+          <div class="course-code">${c.code}</div>
+          <div class="course-name">${c.name}</div>
+          ${c.star ? '<div class="badge specialty">Specialty</div>' : '<div></div>'}
+        </div>
+      `).join('')}
+    </div>
+  `;
+  catalogRoot.appendChild(deptEl);
+});
+
+/* ---------------- AVAILABILITY GRID ---------------- */
+const days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+const weekend = new Set(["Sat","Sun"]);
+const hours = [9,10,11,12,13,14,15,16,17,18]; // 9am - 7pm, 1hr blocks
+function label(h){ const period = h>=12?'PM':'AM'; let hr = h%12; if(hr===0) hr=12; return hr+period; }
+
+const table = document.getElementById('scheduleTable');
+let mode = 'book';
+
+function slotKey(day, hour){ return `slot:${day}:${hour}`; }
+function isOffered(day, hour){
+  if(weekend.has(day)) return true;
+  return hour >= 15; // weekday afternoons 3pm-7pm
+}
+
+async function getSlotState(day, hour){
+  try{
+    const r = await window.storage.get(slotKey(day,hour), true);
+    return r ? JSON.parse(r.value) : { status:'open' };
+  }catch(e){
+    return { status:'open' };
+  }
+}
+async function setSlotState(day, hour, state){
+  try{
+    await window.storage.set(slotKey(day,hour), JSON.stringify(state), true);
+  }catch(e){ console.error('storage error', e); }
+}
+
+async function renderTable(){
+  let thead = `<tr><th>Time</th>${days.map(d=>`<th>${d}</th>`).join('')}</tr>`;
+  let rows = '';
+  for(const h of hours){
+    rows += `<tr><td class="time">${label(h)}–${label(h+1)}</td>`;
+    for(const d of days){
+      if(!isOffered(d,h)){
+        rows += `<td><div class="slot closed">—</div></td>`;
+      } else {
+        rows += `<td><div class="slot open" data-day="${d}" data-hour="${h}">···</div></td>`;
+      }
+    }
+    rows += `</tr>`;
+  }
+  table.innerHTML = thead + rows;
+
+  // hydrate real states
+  const cells = table.querySelectorAll('.slot[data-day]');
+  for(const cell of cells){
+    const day = cell.dataset.day, hour = cell.dataset.hour;
+    const state = await getSlotState(day, hour);
+    applyState(cell, state);
+  }
+}
+
+function applyState(cell, state){
+  cell.classList.remove('open','booked','blocked');
+  if(state.status === 'booked'){
+    cell.classList.add('booked');
+    cell.textContent = state.name ? state.name.split(' ')[0] : 'Booked';
+    cell.title = `Booked${state.name ? ' by '+state.name : ''}${state.subject ? ' — '+state.subject : ''}`;
+  } else if(state.status === 'blocked'){
+    cell.classList.add('blocked');
+    cell.textContent = 'Blocked';
+    cell.title = 'Marked unavailable by tutor';
+  } else {
+    cell.classList.add('open');
+    cell.textContent = '···';
+    cell.title = 'Open — click to book';
+  }
+}
+
+document.getElementById('modeToggle').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  mode = btn.dataset.mode;
+  document.querySelectorAll('#modeToggle button').forEach(b=>b.classList.toggle('active', b===btn));
+});
+
+const scheduleStatus = document.getElementById('scheduleStatus');
+
+table?.addEventListener('click', async (e)=>{});
+document.addEventListener('click', async (e)=>{
+  const cell = e.target.closest('.slot[data-day]');
+  if(!cell) return;
+  const day = cell.dataset.day, hour = cell.dataset.hour;
+  const current = await getSlotState(day, hour);
+
+  if(mode === 'book'){
+    if(current.status !== 'open'){
+      scheduleStatus.textContent = 'That slot is no longer open — pick another.';
+      scheduleStatus.className = 'form-status';
+      return;
+    }
+    const name = prompt("Your name:");
+    if(!name) return;
+    const subject = prompt("What subject do you want help with?") || '';
+    const newState = { status:'booked', name, subject };
+    await setSlotState(day, hour, newState);
+    applyState(cell, newState);
+    scheduleStatus.textContent = `Booked ${day} ${label(hour)}–${label(+hour+1)} for ${name}.`;
+    scheduleStatus.className = 'form-status ok';
+  } else {
+    // tutor mode: cycle open -> blocked -> open (skip other people's bookings without confirm)
+    if(current.status === 'booked'){
+      const ok = confirm(`This slot is booked by ${current.name || 'a student'}. Clear it?`);
+      if(!ok) return;
+      const newState = { status:'open' };
+      await setSlotState(day, hour, newState);
+      applyState(cell, newState);
+      scheduleStatus.textContent = 'Booking cleared.';
+      scheduleStatus.className = 'form-status ok';
+      return;
+    }
+    const newState = current.status === 'blocked' ? { status:'open' } : { status:'blocked' };
+    await setSlotState(day, hour, newState);
+    applyState(cell, newState);
+    scheduleStatus.textContent = newState.status === 'blocked' ? 'Marked unavailable.' : 'Marked open again.';
+    scheduleStatus.className = 'form-status ok';
+  }
+});
+
+renderTable();
+
+/* ---------------- CONTACT FORM ---------------- */
+document.getElementById('contactForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const name = document.getElementById('cname').value.trim();
+  const email = document.getElementById('cemail').value.trim();
+  const subject = document.getElementById('csubject').value.trim();
+  const message = document.getElementById('cmessage').value.trim();
+  const status = document.getElementById('formStatus');
+
+  const entry = { name, email, subject, message, ts: Date.now() };
+  try{
+    await window.storage.set(`message:${entry.ts}`, JSON.stringify(entry), true);
+    status.textContent = 'Message sent — thanks! I\'ll get back to you soon.';
+    status.className = 'form-status ok';
+    e.target.reset();
+  }catch(err){
+    status.textContent = 'Something went wrong — please email directly instead.';
+    status.className = 'form-status';
+  }
+});
+</script>
+</body>
+</html>
