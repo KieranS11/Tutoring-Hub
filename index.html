@@ -88,7 +88,7 @@
   }
   .course-list{display:flex;flex-direction:column;}
   .course{
-    display:grid;grid-template-columns:96px 1fr auto;gap:16px;align-items:center;
+    display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;
     padding:12px 10px;border-radius:var(--radius);transition:background .15s ease;
   }
   .course:hover{background:var(--paper-raised);}
@@ -154,7 +154,6 @@
     .contact-grid{grid-template-columns:1fr;}
     .contact-info{border-left:none;padding-left:0;border-top:1px solid var(--line);padding-top:24px;}
     .course{grid-template-columns:1fr;gap:4px;}
-    .course-code{order:2;}
   }
   @media (prefers-reduced-motion: reduce){
     *{animation:none !important;transition:none !important;}
@@ -278,22 +277,21 @@ const departments = [
   ]},
   { name: "Sciences", courses: [
     { code: "CHEM 101", name: "Chemistry" },
-    { code: "STEM 100", name: "STEM Academy Survey" },
   ]},
   { name: "History", courses: [
     { code: "HIST 110", name: "World History" },
     { code: "HIST 120", name: "US History" },
   ]},
   { name: "World Language", courses: [
-    { name: "Spanish 1" },
-    { name: "Spanish 2" },
-    { name: "Spanish 3", star:true },
-    { name: "Spanish 4", star:true },
+    { code: "SPAN 101", name: "Spanish 1" },
+    { code: "SPAN 102", name: "Spanish 2" },
+    { code: "SPAN 201", name: "Spanish 3", star:true },
+    { code: "SPAN 202", name: "Spanish 4", star:true },
   ]},
-  { name: "Misc.", [
+  { name: "Misc.", courses: [
     { code: "MUS 301", name: "AP Music Theory", star:true },
-    { name: "SAT Math Prep" },
-    { name: "STEM Academy Survey"}
+    { code: "TEST 100", name: "SAT Math Prep" },
+    { code: "STEM 100", name: "STEM Academy Survey" },
   ]},
 ];
 
@@ -306,7 +304,6 @@ departments.forEach(dept => {
     <div class="course-list">
       ${dept.courses.map(c => `
         <div class="course">
-          <div class="course-code">${c.code}</div>
           <div class="course-name">${c.name}</div>
           ${c.star ? '<div class="badge specialty">Specialty</div>' : '<div></div>'}
         </div>
@@ -396,7 +393,6 @@ document.getElementById('modeToggle').addEventListener('click', (e)=>{
 
 const scheduleStatus = document.getElementById('scheduleStatus');
 
-table?.addEventListener('click', async (e)=>{});
 document.addEventListener('click', async (e)=>{
   const cell = e.target.closest('.slot[data-day]');
   if(!cell) return;
