@@ -54,6 +54,8 @@
     color:var(--ink-soft);font-size:17px;max-width:520px;margin-top:18px;
     opacity:0; animation: fadeUp .7s ease-out .16s forwards;
   }
+  .subtitle a{color:var(--brass);text-decoration:underline;text-underline-offset:2px;}
+  .subtitle a:hover{color:var(--ink);}
   .hero-meta{
     display:flex;gap:28px;flex-wrap:wrap;margin-top:34px;
     opacity:0; animation: fadeUp .7s ease-out .24s forwards;
@@ -70,6 +72,9 @@
   .btn:hover{transform:translateY(-1px);background:#2c3c60;}
   .btn.ghost{background:transparent;color:var(--ink);border-color:var(--ink);}
   .btn.ghost:hover{background:var(--ink);color:var(--paper);}
+  .btn.small{padding:8px 14px;font-size:12px;}
+  .btn.danger{border-color:var(--rust);color:var(--rust);background:transparent;}
+  .btn.danger:hover{background:var(--rust);color:var(--paper);}
   @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
   /* ---------- SECTION HEADERS ---------- */
@@ -102,12 +107,15 @@
   .badge.specialty::before{content:"★ ";}
 
   /* ---------- AVAILABILITY ---------- */
-  .mode-toggle{display:flex;gap:0;border:1px solid var(--ink);border-radius:var(--radius);overflow:hidden;width:fit-content;margin-bottom:22px;}
+  .avail-controls{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:22px;}
+  .mode-toggle{display:flex;gap:0;border:1px solid var(--ink);border-radius:var(--radius);overflow:hidden;width:fit-content;}
   .mode-toggle button{
     font-family:'IBM Plex Mono',monospace;font-size:12px;padding:9px 16px;border:none;background:var(--paper);
     cursor:pointer;color:var(--ink-soft);
   }
   .mode-toggle button.active{background:var(--ink);color:var(--paper);}
+  #resetBtn{display:none;}
+  #resetBtn.visible{display:inline-flex;}
   .legend{display:flex;gap:18px;margin-bottom:18px;flex-wrap:wrap;}
   .legend span{font-size:12px;color:var(--ink-soft);display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;}
   .legend i{width:11px;height:11px;border-radius:2px;display:inline-block;}
@@ -166,14 +174,13 @@
   <div class="wrap">
     <div class="eyebrow">Est. 2026</div>
     <h1 class="title">Kieran's Tutoring Hub</h1>
-    <p class="subtitle">Help me help you! When I grow up I want to be a professor, as a student-athlete with various extracurriculars, I know there are various circumstances that could make the school experience extremely difficult. I aim to provide an easily accesible, helpful, and free resource for students of FRHS to use.</p>
-   <p class="subtitle">Tutoring sessions will typically be in the mornings before school starts or at the <a href="https://www.psdfutureready.org/tutoring/" target="_blank" rel="noopener">PSD Future Ready peer tutoring</a> sessions.</p>
+    <p class="subtitle">Help me help you! When I grow up I want to be a professor, as a student-athlete with various extracurriculars, I know there are various circumstances that could make the school experience extremely difficult. I aim to provide an easily accesible, helpful, and <strong>free</strong> resource for all students to use.</p>
+   <p class="subtitle">Tutoring sessions will typically be in the mornings before school starts, at the <a href="https://poudrelibraries.org/council-tree-library/" target="_blank" rel="noopener">Council Tree Library</a> or at the <a href="https://www.psdfutureready.org/tutoring/" target="_blank" rel="noopener">PSD Future Ready peer tutoring</a> sessions.</p>
     <div class="hero-meta">
-      <div>Courses<strong>6+ subject areas</strong><strong>15+ Courses</strong></div>
+      <div><strong>6+ Subject areas</strong><strong>15+ Courses</strong></div>
     </div>
     <div class="cta-row">
       <a href="#availability" class="btn">Schedule a session →</a>
-      <a href="#catalog" class="btn ghost">View subjects</a>
     </div>
   </div>
 </header>
@@ -195,9 +202,12 @@
       <div class="sec-note">Weekday afternoons · most of the day on weekends</div>
     </div>
 
-    <div class="mode-toggle" id="modeToggle">
-      <button class="active" data-mode="book">Book a slot</button>
-      <button data-mode="tutor">Tutor: manage availability</button>
+    <div class="avail-controls">
+      <div class="mode-toggle" id="modeToggle">
+        <button class="active" data-mode="book">Book a slot</button>
+        <button data-mode="tutor">Tutor: manage availability</button>
+      </div>
+      <button id="resetBtn" class="btn small danger">Reset all bookings &amp; blocks</button>
     </div>
 
     <div class="legend">
@@ -386,11 +396,13 @@ function applyState(cell, state){
   }
 }
 
+const resetBtn = document.getElementById('resetBtn');
 document.getElementById('modeToggle').addEventListener('click', (e)=>{
   const btn = e.target.closest('button');
   if(!btn) return;
   mode = btn.dataset.mode;
   document.querySelectorAll('#modeToggle button').forEach(b=>b.classList.toggle('active', b===btn));
+  resetBtn.classList.toggle('visible', mode === 'tutor');
 });
 
 const scheduleStatus = document.getElementById('scheduleStatus');
@@ -432,6 +444,30 @@ document.addEventListener('click', async (e)=>{
     applyState(cell, newState);
     scheduleStatus.textContent = newState.status === 'blocked' ? 'Marked unavailable.' : 'Marked open again.';
     scheduleStatus.className = 'form-status ok';
+  }
+});
+
+resetBtn.addEventListener('click', async ()=>{
+  const ok = confirm('This will clear every booking and blocked slot for the whole week. This can\'t be undone. Continue?');
+  if(!ok) return;
+  resetBtn.disabled = true;
+  resetBtn.textContent = 'Resetting…';
+  try{
+    const list = await window.storage.list('slot:', true);
+    const keys = (list && list.keys) ? list.keys : [];
+    for(const key of keys){
+      await window.storage.delete(key, true);
+    }
+    await renderTable();
+    scheduleStatus.textContent = 'All bookings and blocks have been cleared.';
+    scheduleStatus.className = 'form-status ok';
+  }catch(err){
+    console.error('reset error', err);
+    scheduleStatus.textContent = 'Something went wrong clearing the schedule — try again.';
+    scheduleStatus.className = 'form-status';
+  }finally{
+    resetBtn.disabled = false;
+    resetBtn.textContent = 'Reset all bookings & blocks';
   }
 });
 
