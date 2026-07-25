@@ -106,39 +106,16 @@
   .badge.specialty{background:var(--brass-soft);color:var(--brass);border:1px solid #e3d1a6;}
   .badge.specialty::before{content:"★ ";}
 
-  /* ---------- AVAILABILITY ---------- */
-  .avail-controls{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:22px;}
-  .mode-toggle{display:flex;gap:0;border:1px solid var(--ink);border-radius:var(--radius);overflow:hidden;width:fit-content;}
-  .mode-toggle button{
-    font-family:'IBM Plex Mono',monospace;font-size:12px;padding:9px 16px;border:none;background:var(--paper);
-    cursor:pointer;color:var(--ink-soft);
+  /* ---------- BOOKING FORM ---------- */
+  .form-embed{
+    border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--paper-raised);
   }
-  .mode-toggle button.active{background:var(--ink);color:var(--paper);}
-  #resetBtn{display:none;}
-  #resetBtn.visible{display:inline-flex;}
-  .legend{display:flex;gap:18px;margin-bottom:18px;flex-wrap:wrap;}
-  .legend span{font-size:12px;color:var(--ink-soft);display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;}
-  .legend i{width:11px;height:11px;border-radius:2px;display:inline-block;}
-  .grid-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper-raised);}
-  table.schedule{border-collapse:collapse;width:100%;min-width:640px;}
-  table.schedule th, table.schedule td{border:1px solid var(--line);text-align:center;padding:0;}
-  table.schedule th{
-    font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-soft);
-    padding:10px 4px;background:var(--paper);font-weight:500;
+  .form-embed iframe{display:block;border:none;}
+  .form-embed-fallback{
+    margin-top:14px;font-size:13px;color:var(--ink-faint);font-family:'IBM Plex Mono',monospace;
   }
-  table.schedule td.time{
-    font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-faint);
-    padding:0 8px;white-space:nowrap;background:var(--paper);
-  }
-  .slot{
-    height:38px;cursor:pointer;font-size:10.5px;font-family:'IBM Plex Mono',monospace;
-    display:flex;align-items:center;justify-content:center;transition:filter .1s ease;
-  }
-  .slot:hover{filter:brightness(0.95);}
-  .slot.open{background:var(--sage-soft);color:var(--sage);}
-  .slot.closed{background:#EDEBE4;color:var(--ink-faint);cursor:default;}
-  .slot.booked{background:var(--brass-soft);color:var(--brass);}
-  .slot.blocked{background:var(--rust-soft);color:var(--rust);}
+  .form-embed-fallback a{color:var(--brass);}
+  .form-embed-fallback a:hover{color:var(--ink);}
 
   /* ---------- CONTACT ---------- */
   .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;}
@@ -162,6 +139,7 @@
     .contact-grid{grid-template-columns:1fr;}
     .contact-info{border-left:none;padding-left:0;border-top:1px solid var(--line);padding-top:24px;}
     .course{grid-template-columns:1fr;gap:4px;}
+    .form-embed iframe{height:1100px !important;}
   }
   @media (prefers-reduced-motion: reduce){
     *{animation:none !important;transition:none !important;}
@@ -198,29 +176,16 @@
 <section id="availability">
   <div class="wrap">
     <div class="sec-head">
-      <div><div class="sec-num">§ 02</div><h2 class="sec-title">Weekly Availability</h2></div>
-      <div class="sec-note">Weekday afternoons · most of the day on weekends</div>
+      <div><div class="sec-num">§ 02</div><h2 class="sec-title">Book a Session</h2></div>
+      <div class="sec-note">Fill out the form below to request a time</div>
     </div>
 
-    <div class="avail-controls">
-      <div class="mode-toggle" id="modeToggle">
-        <button class="active" data-mode="book">Book a slot</button>
-        <button data-mode="tutor">Tutor: manage availability</button>
-      </div>
-      <button id="resetBtn" class="btn small danger">Reset all bookings &amp; blocks</button>
+    <div class="form-embed">
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfWSDD51DdF8q4PH-9aAzkJQrYkdgzeTm3WKDny4WGRdkwYiQ/viewform?embedded=true" width="100%" height="900" frameborder="0" marginheight="0" marginwidth="0">Loading form…</iframe>
     </div>
-
-    <div class="legend">
-      <span><i style="background:var(--sage-soft);border:1px solid var(--sage);"></i>Open</span>
-      <span><i style="background:var(--brass-soft);border:1px solid var(--brass);"></i>Booked</span>
-      <span><i style="background:var(--rust-soft);border:1px solid var(--rust);"></i>Blocked</span>
-      <span><i style="background:#EDEBE4;border:1px solid var(--ink-faint);"></i>Not offered</span>
+    <div class="form-embed-fallback">
+      Form not loading? <a href="https://docs.google.com/forms/d/e/1FAIpQLSfWSDD51DdF8q4PH-9aAzkJQrYkdgzeTm3WKDny4WGRdkwYiQ/viewform" target="_blank" rel="noopener">Open it in a new tab</a>.
     </div>
-
-    <div class="grid-scroll">
-      <table class="schedule" id="scheduleTable"></table>
-    </div>
-    <div class="form-status" id="scheduleStatus"></div>
   </div>
 </section>
 
@@ -261,7 +226,7 @@
         <div class="label">Response time</div>
         <div class="val">Within 24 hours</div>
         <div class="label">Best for</div>
-        <div class="val">Book through the schedule above for fastest confirmation — the form is great for questions before you book.</div>
+        <div class="val">Use the booking form above for fastest confirmation — the message form is great for questions before you book.</div>
       </div>
     </div>
   </div>
@@ -281,18 +246,19 @@ const departments = [
     { code: "MATH 220", name: "College Trigonometry" },
   ]},
   { name: "English & Writing", courses: [
-    { code: "ENGL 101", name: "CP English 9 / English 9" },
-    { code: "ENGL 201", name: "CP English 10 / English 10" },
+    { code: "ENGL 101", name: "English 9 / CP English 9" },
+    { code: "ENGL 201", name: "English 10 / CP English 10" },
     { code: "ENGL 300", name: "U.S. Literature & Composition" },
     { code: "ENGL 301", name: "AP English Language & Composition" },
-    { code: "ENGL 250", name: "FRCC Literature and Film" },
+    { code: "ENGL 250", name: "FRCC Introduction to Literature" },
+    { code: "ENGL 251", name: "FRCC Literature and Film" },
   ]},
   { name: "Science", courses: [
-    { code: "CHEM 101", name: "Advanced Chemistry / Chemistry" },
+    { code: "CHEM 101", name: "Chemistry / Advanced Chemistry" },
   ]},
   { name: "History", courses: [
-    { code: "HIST 110", name: "CP World History / World History" },
-    { code: "HIST 120", name: "US History" },
+    { code: "HIST 110", name: "World History / CP World History" },
+    { code: "HIST 120", name: "U.S. History" },
   ]},
   { name: "World Language", courses: [
     { code: "SPAN 101", name: "Spanish 1" },
@@ -302,8 +268,7 @@ const departments = [
   ]},
   { name: "Misc.", courses: [
     { code: "MUS 301", name: "AP Music Theory" },
-    { code: "TEST 100", name: "SAT Math Prep" },
-    { code: "STEM 100", name: "STEM Academy Survey" },
+    { code: "TEST 100", name: "SAT Math Preparation" },
   ]},
 ];
 
@@ -324,154 +289,6 @@ departments.forEach(dept => {
   `;
   catalogRoot.appendChild(deptEl);
 });
-
-/* ---------------- AVAILABILITY GRID ---------------- */
-const days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-const weekend = new Set(["Sat","Sun"]);
-const hours = [9,10,11,12,13,14,15,16,17,18]; // 9am - 7pm, 1hr blocks
-function label(h){ const period = h>=12?'PM':'AM'; let hr = h%12; if(hr===0) hr=12; return hr+period; }
-
-const table = document.getElementById('scheduleTable');
-let mode = 'book';
-
-function slotKey(day, hour){ return `slot:${day}:${hour}`; }
-function isOffered(day, hour){
-  if(weekend.has(day)) return true;
-  return hour >= 15; // weekday afternoons 3pm-7pm
-}
-
-async function getSlotState(day, hour){
-  try{
-    const r = await window.storage.get(slotKey(day,hour), true);
-    return r ? JSON.parse(r.value) : { status:'open' };
-  }catch(e){
-    return { status:'open' };
-  }
-}
-async function setSlotState(day, hour, state){
-  try{
-    await window.storage.set(slotKey(day,hour), JSON.stringify(state), true);
-  }catch(e){ console.error('storage error', e); }
-}
-
-async function renderTable(){
-  let thead = `<tr><th>Time</th>${days.map(d=>`<th>${d}</th>`).join('')}</tr>`;
-  let rows = '';
-  for(const h of hours){
-    rows += `<tr><td class="time">${label(h)}–${label(h+1)}</td>`;
-    for(const d of days){
-      if(!isOffered(d,h)){
-        rows += `<td><div class="slot closed">—</div></td>`;
-      } else {
-        rows += `<td><div class="slot open" data-day="${d}" data-hour="${h}">···</div></td>`;
-      }
-    }
-    rows += `</tr>`;
-  }
-  table.innerHTML = thead + rows;
-
-  // hydrate real states
-  const cells = table.querySelectorAll('.slot[data-day]');
-  for(const cell of cells){
-    const day = cell.dataset.day, hour = cell.dataset.hour;
-    const state = await getSlotState(day, hour);
-    applyState(cell, state);
-  }
-}
-
-function applyState(cell, state){
-  cell.classList.remove('open','booked','blocked');
-  if(state.status === 'booked'){
-    cell.classList.add('booked');
-    cell.textContent = state.name ? state.name.split(' ')[0] : 'Booked';
-    cell.title = `Booked${state.name ? ' by '+state.name : ''}${state.subject ? ' — '+state.subject : ''}`;
-  } else if(state.status === 'blocked'){
-    cell.classList.add('blocked');
-    cell.textContent = 'Blocked';
-    cell.title = 'Marked unavailable by tutor';
-  } else {
-    cell.classList.add('open');
-    cell.textContent = '···';
-    cell.title = 'Open — click to book';
-  }
-}
-
-const resetBtn = document.getElementById('resetBtn');
-document.getElementById('modeToggle').addEventListener('click', (e)=>{
-  const btn = e.target.closest('button');
-  if(!btn) return;
-  mode = btn.dataset.mode;
-  document.querySelectorAll('#modeToggle button').forEach(b=>b.classList.toggle('active', b===btn));
-  resetBtn.classList.toggle('visible', mode === 'tutor');
-});
-
-const scheduleStatus = document.getElementById('scheduleStatus');
-
-document.addEventListener('click', async (e)=>{
-  const cell = e.target.closest('.slot[data-day]');
-  if(!cell) return;
-  const day = cell.dataset.day, hour = cell.dataset.hour;
-  const current = await getSlotState(day, hour);
-
-  if(mode === 'book'){
-    if(current.status !== 'open'){
-      scheduleStatus.textContent = 'That slot is no longer open — pick another.';
-      scheduleStatus.className = 'form-status';
-      return;
-    }
-    const name = prompt("Your name:");
-    if(!name) return;
-    const subject = prompt("What subject do you want help with?") || '';
-    const newState = { status:'booked', name, subject };
-    await setSlotState(day, hour, newState);
-    applyState(cell, newState);
-    scheduleStatus.textContent = `Booked ${day} ${label(hour)}–${label(+hour+1)} for ${name}.`;
-    scheduleStatus.className = 'form-status ok';
-  } else {
-    // tutor mode: cycle open -> blocked -> open (skip other people's bookings without confirm)
-    if(current.status === 'booked'){
-      const ok = confirm(`This slot is booked by ${current.name || 'a student'}. Clear it?`);
-      if(!ok) return;
-      const newState = { status:'open' };
-      await setSlotState(day, hour, newState);
-      applyState(cell, newState);
-      scheduleStatus.textContent = 'Booking cleared.';
-      scheduleStatus.className = 'form-status ok';
-      return;
-    }
-    const newState = current.status === 'blocked' ? { status:'open' } : { status:'blocked' };
-    await setSlotState(day, hour, newState);
-    applyState(cell, newState);
-    scheduleStatus.textContent = newState.status === 'blocked' ? 'Marked unavailable.' : 'Marked open again.';
-    scheduleStatus.className = 'form-status ok';
-  }
-});
-
-resetBtn.addEventListener('click', async ()=>{
-  const ok = confirm('This will clear every booking and blocked slot for the whole week. This can\'t be undone. Continue?');
-  if(!ok) return;
-  resetBtn.disabled = true;
-  resetBtn.textContent = 'Resetting…';
-  try{
-    const list = await window.storage.list('slot:', true);
-    const keys = (list && list.keys) ? list.keys : [];
-    for(const key of keys){
-      await window.storage.delete(key, true);
-    }
-    await renderTable();
-    scheduleStatus.textContent = 'All bookings and blocks have been cleared.';
-    scheduleStatus.className = 'form-status ok';
-  }catch(err){
-    console.error('reset error', err);
-    scheduleStatus.textContent = 'Something went wrong clearing the schedule — try again.';
-    scheduleStatus.className = 'form-status';
-  }finally{
-    resetBtn.disabled = false;
-    resetBtn.textContent = 'Reset all bookings & blocks';
-  }
-});
-
-renderTable();
 
 /* ---------------- CONTACT FORM ---------------- */
 document.getElementById('contactForm').addEventListener('submit', async (e)=>{
