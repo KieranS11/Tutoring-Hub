@@ -147,12 +147,15 @@
     <h1 class="title">Kieran's Tutoring Hub</h1>
     <p class="subtitle">Hello! I'm Kieran Switala, and after graduating I plan to pursue a career as a professor. As a student-athlete who is involved in the clubs here at FRHS, I know that the school experience can be extremely difficult for everyone. I aim to provide an easily accessible, helpful, and <strong>free</strong> resource for all students to use.</p>
    <p class="subtitle">Tutoring sessions will typically be in the mornings before school starts or at the <a href="https://poudrelibraries.org/council-tree-library/" target="_blank" rel="noopener">Council Tree Library</a>.</p>
-        <div class="hero-meta">
+
+    <div class="cta-row" style="margin-top:26px;">
+      <a href="#availability" class="btn">Schedule a session →</a>
+    </div>
+
+        <div style="margin-top:40px;font-family:'Source Serif 4',serif;font-weight:700;font-size:17px;color:var(--ink);opacity:0;animation:fadeUp .7s ease-out .2s forwards;">Contact Information</div>
+        <div class="hero-meta" style="margin-top:12px;">
       <div>Email<strong><a href="mailto:97012@psdschools.org" style="color:inherit;text-decoration:none;">97012@psdschools.org</a></strong></div>
       <div>Phone<strong><a href="tel:+19706829515" style="color:inherit;text-decoration:none;">(970) 682-9515</a></strong></div>
-    </div>
-    <div class="hero-meta" style="margin-top:14px;">
-      <div><strong>6+ Subject areas</strong><strong>15+ Courses</strong></div>
     </div>
 
     <div class="support-block">
@@ -161,17 +164,18 @@
         <img src="https://storage.ko-fi.com/cdn/kofi3.png?v=3" alt="Support me on Ko-fi" />
       </a>
     </div>
-
-    <div class="cta-row">
-      <a href="#availability" class="btn">Schedule a session →</a>
-    </div>
   </div>
 </header>
 
 <section id="catalog">
   <div class="wrap">
     <div class="sec-head">
-      <div><h2 class="sec-title">Subject Catalog</h2></div>
+      <div>
+        <h2 class="sec-title">Subject Catalog</h2>
+        <div class="hero-meta" style="margin-top:12px;opacity:1;animation:none;">
+          <div><strong>6+ Subject areas</strong><strong>15+ Courses</strong></div>
+        </div>
+      </div>
     </div>
 
     <div id="catalog-root"></div>
@@ -227,7 +231,7 @@ const departments = [
     { code: "SPAN 201", name: "Spanish 3" },
     { code: "SPAN 202", name: "Spanish 4" },
   ]},
-  { name: "Other", courses: [
+  { name: "Misc.", courses: [
     { code: "MUS 201", name: "Music Theory" },
     { code: "MUS 301", name: "AP Music Theory" },
     { code: "TEST 100", name: "SAT Math Preparation" },
